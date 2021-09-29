@@ -5,8 +5,8 @@ import time
 
 scopes = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
-#creds = ServiceAccountCredentials.from_json_keyfile_name('/home/ec2-user/order/client_secret.json', scopes)
-creds= ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scopes)
+creds = ServiceAccountCredentials.from_json_keyfile_name('/home/ec2-user/order/client_secret.json', scopes)
+#creds= ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scopes)
 client = gspread.authorize(creds)
 
 

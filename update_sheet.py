@@ -15,4 +15,4 @@ for item in third_wheel:
 
 
 def update_sheetfn():
-    store_customer_data(new_customer['id'], new_customer['name'], new_customer['phone'],new_customer['address'], shipping_info['method'], shipping_info['time'], new_customer['total'], gatherfive, wheelthree, total_quantity['1'],total_quantity['2'], total_quantity['3'], total_quantity['4'], total_quantity['5'], total_quantity['6'], 'order_test')
+    store_customer_data(new_customer['id'], new_customer['name'], new_customer['phone'],new_customer['address'],new_customer['ordercomments'], shipping_info['method'], shipping_info['time'], new_customer['total'], gatherfive, wheelthree, total_quantity['1'],total_quantity['2'], total_quantity['3'], total_quantity['4'], total_quantity['5'], total_quantity['6'], 'Ecwid order')

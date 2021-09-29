@@ -7,7 +7,7 @@ from google_sheets_api import check_order
 import ecwid_data
 from ecwid_data import new_customer
 
-if check_order(new_customer['id'], 'order_test') == False:
+if check_order(new_customer['id'], 'Ecwid order') == False:
     update_sheetfn()
 
 

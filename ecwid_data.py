@@ -19,7 +19,6 @@ querystring = {"token":os.getenv('ecwidtoken')}
 headers = {"Accept": "application/json"}
 
 response = requests.get(url, headers=headers, params=querystring).json()
-print (response)
 
 store_data = response #converts customer data into dictionary for manipulation
 
@@ -31,14 +30,18 @@ basic_customer_data = order_entry[0] #first dictionary in the array of order_ent
 
 #CUSTOMER DATA
 
+
+
 new_customer = {
     'id': str(basic_customer_data['id']),
     'total': str(basic_customer_data['total']),
     'email': basic_customer_data['email'],
     'paymentstatus': basic_customer_data['paymentStatus'],
     'name': str(basic_customer_data['shippingPerson']['name']),
-    'phone': str(basic_customer_data['shippingPerson']['phone'])
+    'phone': str(basic_customer_data['shippingPerson']['phone']),
+    'ordercomments': str(basic_customer_data['orderComments'])
 }
+
 
 if 'paymentMethod' in basic_customer_data:
     new_customer['paymentmethod'] = basic_customer_data['paymentMethod']
@@ -49,37 +52,37 @@ else:
 shipping_info = {}
 delivery_method = basic_customer_data['shippingOption']
 
+
 if 'extraFields' in basic_customer_data:
-    delivery_time_interval = basic_customer_data['extraFields']
-else:
-    delivery_time_interval = 'Check with customer'
-
-
-if delivery_time_interval == 'Check with customer':
-    if delivery_method['isPickup'] == False:
-        #store shipment data
+    print (basic_customer_data['extraFields'])
+    if 'ecwid_order_delivery_time_interval_start' in basic_customer_data['extraFields']:
         new_customer['address']=str(basic_customer_data['shippingPerson']['street'] + " " + basic_customer_data['shippingPerson']['postalCode'])  
         new_customer ['postcode'] = str(basic_customer_data['shippingPerson']['postalCode'])
-        delivery_time = 'Ecwid bug. Check with customer'
-    else:
-        delivery_time = 'Ecwid bug. Check with customer.'
+        delivery_time= convert_to_unix(basic_customer_data['extraFields']['ecwid_order_delivery_time_interval_start'])
+
+    elif 'ecwid_order_pickup_time' in basic_customer_data['extraFields']: 
         new_customer['address'] = 'pickup'
         new_customer['postcode'] = 'pickup'
+        delivery_time = convert_to_unix(basic_customer_data['extraFields']['ecwid_order_pickup_time'])
 
+    else:
+        delivery_time = 'Ecwid bug. Check with customer'
 else:
+    delivery_time = 'Ecwid bug. Check with customer'
+
+
+
+if delivery_time == 'Ecwid bug. Check with customer':
     if delivery_method['isPickup'] == False:
         #store shipment data
         new_customer['address']=str(basic_customer_data['shippingPerson']['street'] + " " + basic_customer_data['shippingPerson']['postalCode'])  
         new_customer ['postcode'] = str(basic_customer_data['shippingPerson']['postalCode'])
-        delivery_time = convert_to_unix(delivery_time_interval['ecwid_order_delivery_time_interval_start'])
     else:
-        delivery_time = convert_to_unix(delivery_time_interval['ecwid_order_pickup_time'])
         new_customer['address'] = 'pickup'
         new_customer['postcode'] = 'pickup'
 
 shipping_info['method'] = delivery_method['shippingMethodName']
 shipping_info['time'] = delivery_time
-
 
 #ITEMS 
 
